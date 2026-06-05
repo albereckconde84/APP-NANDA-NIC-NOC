@@ -4,13 +4,13 @@ from datetime import datetime
 # Configuración de la pantalla móvil y estilo
 st.set_page_config(page_title="SICE - Enfermería", page_icon="🩺", layout="centered")
 
-# --- ESTILOS VISUALES PARA MÓVIL ---
+# --- ESTILOS VISUALES PARA MÓVIL (CORREGIDO) ---
 st.markdown("""
     <style>
     .main .block-container { padding-top: 2rem; }
     div.stButton > button:first-child { width: 100%; margin-top: 10px; }
     </style>
-""", unsafe_allow_allowed=True)
+""", unsafe_allow_html=True)
 
 # --- MENÚ DE NAVEGACIÓN LATERAL ---
 with st.sidebar:
@@ -49,7 +49,7 @@ if opcion == "👥 Control de Pacientes":
     st.info(f"📋 **Nota de Entrega de Guardia:** {pacientes[paciente_sel]}")
     st.success("👉 Selecciona la pestaña **'🧠 Gestión del PAE'** en el menú izquierdo para iniciar el proceso con este paciente.")
 
-# --- OPCIÓN 2: GESTIÓN DEL PAE (CON ALERTAS Y NOTA SOAPIE SEPARADA) ---
+# --- OPCIÓN 2: GESTIÓN DEL PAE ---
 elif opcion == "🧠 Gestión del PAE":
     st.title("🧠 Razonamiento Clínico Dinámico")
     st.write("Proceso de Atención de Enfermería automatizado.")
@@ -69,7 +69,7 @@ elif opcion == "🧠 Gestión del PAE":
     dx_activos = 0
     resumen_cuidados = []
 
-    # LÓGICA HIPOTERMIA + ALERTA DE SEGURIDAD
+    # LÓGICA HIPOTERMIA
     if sintoma_frio or sintoma_escalofrio:
         dx_activos += 1
         st.error("🚨 NANDA: [00006] Hipotermia")
@@ -136,22 +136,20 @@ elif opcion == "🧮 Calculadora de Goteo":
     volumen = st.number_input("Volumen de la solución (ml):", min_value=1, value=500)
     horas = st.number_input("Tiempo de infusión (Horas):", min_value=1, value=8)
     
-    # Cálculos matemáticos simples
     ml_hora = volumen / horas
-    gotas_min = (volumen * 20) / (horas * 60) # Factor de gotas estándar (20 gtt = 1ml)
+    gotas_min = (volumen * 20) / (horas * 60)
     
     st.markdown("### 📊 Resultado del Cálculo:")
     st.info(f"💧 Velocidad de infusión: **{ml_hora:.1f} ml/hora**")
     st.success(f"⏱️ Ritmo de goteo: **{gotas_min:.0f} gotas por minuto** (Aproximadamente)")
 
-# --- OPCIÓN 4: BUSCADOR MANUAL (DICCIONARIO NNN) ---
+# --- OPCIÓN 4: BUSCADOR MANUAL ---
 elif opcion == "📖 Diccionario NNN":
     st.title("📖 Buscador Rápido Taxonomía NNN")
     st.write("Consulta la biblioteca de diagnósticos integrados.")
     
     busqueda = st.text_input("🔍 Escribe una palabra clave (ej. Dolor, Respiratorio, Infección, Frío):")
     
-    # Filtrar diccionario
     encontrado = False
     for dx, datos in diccionario_nanda.items():
         if busqueda.lower() in dx.lower() or busqueda.lower() in datos['codigo']:
@@ -164,3 +162,4 @@ elif opcion == "📖 Diccionario NNN":
             
     if not encontrado and busqueda != "":
         st.error("❌ No se encontraron diagnósticos con esa palabra clave en este prototipo.")
+    
