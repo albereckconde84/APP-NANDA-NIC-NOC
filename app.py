@@ -2,7 +2,7 @@ import streamlit as st
 from datetime import datetime
 
 # Configuración de la pantalla móvil y estilo
-st.set_page_config(page_title="SICE - Enfermería", page_icon="🩺", layout="centered")
+st.set_page_config(page_title="SICE - Enfermería Pro", page_icon="🩺", layout="centered")
 
 # --- ESTILOS VISUALES PARA MÓVIL ---
 st.markdown("""
@@ -12,7 +12,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# --- SISTEMA DE MEMORIA PARA PACIENTES (Para que no se borren en la sesión) ---
+# --- SISTEMA DE MEMORIA PARA PACIENTES ---
 if "lista_pacientes" not in st.session_state:
     st.session_state.lista_pacientes = [
         {"cama": "104-A", "nombre": "María Pérez", "nota": "Post-operatorio inmediato. Requiere monitorización respiratoria continua."},
@@ -32,35 +32,60 @@ with st.sidebar:
     st.markdown("---")
     enfermero = st.text_input("👤 Profesional de Guardia:", "Enf. Alexander")
 
-# --- BASE DE DATOS LOCAL SIMULADA (Diccionario) ---
+# --- BASE DE DATOS EXPANDIDA (Diccionario Clínico) ---
 diccionario_nanda = {
-    "Hipotermia": {"codigo": "[00006]", "dominio": "11", "clase": "6", "noc": "[0800] Termorregulación", "nic": "[3900] Regulación de la temperatura"},
-    "Patrón respiratorio ineficaz": {"codigo": "[00032]", "dominio": "4", "clase": "4", "noc": "[0415] Estado respiratorio", "nic": "[3350] Monitorización respiratoria"},
-    "Déficit de autocuidado: Baño": {"codigo": "[00108]", "dominio": "4", "clase": "5", "noc": "[0305] Autocuidado: Higiene", "nic": "[1801] Ayuda con el autocuidado: Baño"},
-    "Dolor agudo": {"codigo": "[00132]", "dominio": "12", "clase": "1", "noc": "[1605] Control del dolor", "nic": "[1400] Manejo del dolor"},
-    "Riesgo de infección": {"codigo": "[00004]", "dominio": "11", "clase": "1", "noc": "[1902] Control del riesgo", "nic": "[6550] Protección contra las infecciones"}
+    "Hipotermia": {
+        "codigo": "[00006]", "dominio": "11", "clase": "6",
+        "definicion": "Temperatura corporal central por debajo del rango de variación normal debido a la falla de la termorregulación.",
+        "causas": "Exposición al entorno frío, desnutrición, trauma, inactividad.",
+        "noc": "[0800] Termorregulación | [0801] Termorregulación: recién nacido",
+        "nic": "[3900] Regulación de la temperatura | [3800] Tratamiento de la hipotermia"
+    },
+    "Patrón respiratorio ineficaz": {
+        "codigo": "[00032]", "dominio": "4", "clase": "4",
+        "definicion": "La inspiración y/o espiración no proporciona una ventilación adecuada.",
+        "causas": "Ansiedad, deformidad de la pared torácica, fatiga de los músculos respiratorios, síndrome de hipoventilación.",
+        "noc": "[0415] Estado respiratorio | [0403] Estado respiratorio: ventilación",
+        "nic": "[3350] Monitorización respiratoria | [3140] Manejo de la vía aérea | [3320] Oxigenoterapia"
+    },
+    "Déficit de autocuidado: Baño": {
+        "codigo": "[00108]", "dominio": "4", "clase": "5",
+        "definicion": "Deterioro de la capacidad para realizar o completar por sí mismo las actividades de baño/higiene.",
+        "causas": "Debilidad, trastornos cognitivos, barreras ambientales, dolor, alteración de la movilidad.",
+        "noc": "[0305] Autocuidado: Higiene | [0300] Autocuidado: Actividades de la vida diaria",
+        "nic": "[1801] Ayuda con el autocuidado: Baño/Higiene | [1610] Baño a la cama"
+    },
+    "Dolor agudo": {
+        "codigo": "[00132]", "dominio": "12", "clase": "1",
+        "definicion": "Experiencia sensitiva y emocional desagradable aproximada a un daño tisular real o potencial, de inicio súbito o lento.",
+        "causas": "Agentes lesivos biológicos, químicos, físicos o psicológicos.",
+        "noc": "[1605] Control del dolor | [2102] Nivel del dolor",
+        "nic": "[1400] Manejo del dolor | [2210] Administración de analgésicos"
+    },
+    "Riesgo de infección": {
+        "codigo": "[00004]", "dominio": "11", "clase": "1",
+        "definicion": "Vulnerable a una invasión y multiplicación de organismos patógenos, que puede comprometer la salud.",
+        "causas": "Procedimientos invasivos, rotura de la integridad de la piel, defensas primarias inadecuadas.",
+        "noc": "[1902] Control del riesgo | [0703] Severidad de la infección",
+        "nic": "[6550] Protección contra las infecciones | [6540] Control de infecciones"
+    }
 }
 
-# --- OPCIÓN 1: CONTROL DE PACIENTES (AHORA ADMITE REGISTRO) ---
+# --- OPCIÓN 1: CONTROL DE PACIENTES ---
 if opcion == "👥 Control de Pacientes":
     st.title("👥 Censo y Control de Pacientes")
     st.write("Gestiona los ingresos y asignación de camas en tu servicio.")
     
-    # Formulario para que el Licenciado agregue un paciente real
     st.markdown("---")
     st.subheader("➕ Registrar Nuevo Ingreso / Cambio de Cama")
-    
-    nueva_cama = st.text_input("Número de Cama / Ubicación:", placeholder="Ej: Cama 105, Cuna 2, Trauma-Shock")
+    nueva_cama = st.text_input("Número de Cama / Ubicación:", placeholder="Ej: Cama 105, Cuna 2")
     nuevo_nombre = st.text_input("Nombre y Apellido del Paciente:", placeholder="Ej: Pedro José Infante")
-    nueva_nota = st.text_area("Nota de Ingreso / Diagnóstico Médico / Alergias:", placeholder="Ej: Paciente cursa con neumonía bilateral, alérgico a la Penicilina.")
+    nueva_nota = st.text_area("Nota de Ingreso / Diagnóstico Médico:", placeholder="Ej: Neumonía bilateral...")
     
     if st.button("➕ Registrar en el Censo"):
         if nueva_cama and nuevo_nombre:
-            # Añadir el nuevo paciente a la memoria de la app
             st.session_state.lista_pacientes.append({
-                "cama": nueva_cama,
-                "nombre": nuevo_nombre,
-                "nota": nueva_nota if nueva_nota else "Sin notas adicionales."
+                "cama": nueva_cama, "nombre": nuevo_nombre, "nota": nueva_nota if nueva_nota else "Sin notas adicionales."
             })
             st.success(f"✅ ¡Paciente {nuevo_nombre} asignado con éxito a la {nueva_cama}!")
         else:
@@ -68,26 +93,18 @@ if opcion == "👥 Control de Pacientes":
             
     st.markdown("---")
     st.subheader("📋 Pacientes Actualmente en Sala")
-    
-    # Crear la lista desplegable basada en los pacientes que existen en la memoria
     opciones_pacientes = [f"{p['cama']} - {p['nombre']}" for p in st.session_state.lista_pacientes]
-    paciente_sel = st.selectbox("Selecciona un paciente para revisar su reporte de entrega:", opciones_pacientes)
-    
-    # Buscar los detalles del paciente seleccionado para mostrarlos
+    paciente_sel = st.selectbox("Selecciona un paciente para revisar su reporte:", opciones_pacientes)
     indice_sel = opciones_pacientes.index(paciente_sel)
     paciente_actual = st.session_state.lista_pacientes[indice_sel]
     
     st.info(f"📋 **Condición médica actual:** {paciente_actual['nota']}")
-    st.success(f"👉 Paciente activo seleccionado: **{paciente_actual['nombre']}**. Ve a la pestaña **'🧠 Gestión del PAE'** para iniciar sus cuidados.")
 
-# --- OPCIÓN 2: GESTIÓN DEL PAE (CONECTADO AL PACIENTE SELECCIONADO) ---
+# --- OPCIÓN 2: GESTIÓN DEL PAE ---
 elif opcion == "🧠 Gestión del PAE":
     st.title("🧠 Razonamiento Clínico Dinámico")
-    
-    # Detectar qué paciente se seleccionó en la otra pestaña
     opciones_pacientes = [f"{p['cama']} - {p['nombre']}" for p in st.session_state.lista_pacientes]
-    # Usamos un selector rápido aquí también por comodidad
-    paciente_sel = st.selectbox("Evaluando a del paciente:", opciones_pacientes)
+    paciente_sel = st.selectbox("Evaluando al paciente:", opciones_pacientes)
     indice_sel = opciones_pacientes.index(paciente_sel)
     paciente_actual = st.session_state.lista_pacientes[indice_sel]
     
@@ -104,14 +121,12 @@ elif opcion == "🧠 Gestión del PAE":
 
     st.markdown("---")
     st.write("**2. Diagnóstico y Planificación**")
-    
     dx_activos = 0
     resumen_cuidados = []
 
     if sintoma_frio or sintoma_escalofrio:
         dx_activos += 1
         st.error("🚨 NANDA: [00006] Hipotermia")
-        st.warning("⚠️ **ALERTA DE SEGURIDAD:** No infundir soluciones endovenosas frías.")
         p_hipo = st.slider("NOC [0800]: Temperatura cutánea normal", 1, 5, value=2, key="p_hipo")
         act1 = st.checkbox("Monitorear temperatura cada 15-30 min.", value=True, key="a1")
         act2 = st.checkbox("Aplicar mantas calientes.", key="a2")
@@ -120,7 +135,6 @@ elif opcion == "🧠 Gestión del PAE":
     if sintoma_respiratorio or sintoma_oxigeno:
         dx_activos += 1
         st.error("🚨 NANDA: [00032] Patrón respiratorio ineficaz")
-        st.warning("⚠️ **ALERTA DE SEGURIDAD:** Mantener equipo de aspiración disponible.")
         p_apnea = st.slider("NOC [0415]: Estado respiratorio", 1, 5, value=2, key="p_apnea")
         act3 = st.checkbox("Vigilar esfuerzo respiratorio.", value=True, key="a3")
         act4 = st.checkbox("Administrar oxígeno según orden médica.", key="a4")
@@ -132,16 +146,14 @@ elif opcion == "🧠 Gestión del PAE":
         p_auto = st.slider("NOC [0305]: Autocuidado: Higiene", 1, 5, value=1, key="p_auto")
         act5 = st.checkbox("Asistir en el aseo general.", value=True, key="a5")
         act6 = st.checkbox("Monitorear integridad cutánea.", key="a6")
-        resumen_cuidados.append({"dx": "Déficit de autocuidado: Baño", "inicial": 1, "final": p_auto, "acts": [a for a, m in [("Asistencia en baño", act5), ("Monitoreo cutáneo", act6)] if m]})
+        resumen_cuidados.append({"dx": "Déficit de autocuidado: Baño", "inicial": 1, "final": p_auto, "acts": [a for a, m in [("Asistencia en baño", act5), ("Monitoreo cutáneo", key="a6")] if m]})
 
     if dx_activos > 0:
         st.markdown("---")
         st.write("**3. Registro de Evaluación**")
-        
         if st.button("💾 Finalizar Turno y Registrar Cuidados", type="primary"):
             st.balloons()
             st.success("✅ Datos procesados con éxito.")
-            
             st.markdown(f"### 📝 Nota de Enfermería (SOAPIE) - {paciente_actual['nombre']}")
             
             s_text = "Paciente refiere sintomatología asociada al motivo de ingreso hospitalario."
@@ -171,18 +183,34 @@ elif opcion == "🧮 Calculadora de Goteo":
     st.info(f"💧 Velocidad de infusión: **{ml_hora:.1f} ml/hora**")
     st.success(f"⏱️ Ritmo de goteo: **{gotas_min:.0f} gotas por minuto**")
 
-# --- OPCIÓN 4: BUSCADOR MANUAL ---
+# --- OPCIÓN 4: DICCIONARIO EXPANDIDO (NUEVO) ---
 elif opcion == "📖 Diccionario NNN":
-    st.title("📖 Buscador Rápido Taxonomía NNN")
-    busqueda = st.text_input("🔍 Escribe una palabra clave:")
+    st.title("📖 Vínculos NANDA, NOC y NIC")
+    st.write("Consulta las definiciones y relaciones del lenguaje estandarizado.")
+    
+    busqueda = st.text_input("🔍 Busca por nombre o código (Ej: Dolor, Infección, 00032):")
+    st.markdown("---")
+    
     encontrado = False
     for dx, datos in diccionario_nanda.items():
         if busqueda.lower() in dx.lower() or busqueda.lower() in datos['codigo']:
             encontrado = True
-            st.markdown(f"### 📋 {datos['codigo']} {dx}")
-            st.write(f"**Estructura:** Dominio {datos['dominio']} | Clase {datos['clase']}")
-            st.info(f"🎯 **NOC sugerido:** {datos['noc']}")
-            st.success(f"📋 **NIC sugerido:** {datos['nic']}")
-            st.markdown("---")
+            st.error(f"📋 {datos['codigo']} {dx}")
+            st.write(f"**Ubicación Taxonómica:** Dominio {datos['dominio']} | Clase {datos['clase']}")
+            
+            # Sub-bloques organizados para la lectura clínica rápida
+            with st.expander("📚 Ver Definición Oficial NANDA"):
+                st.write(datos['definicion'])
+                
+            with st.expander("🧬 Factores Relacionados / Causas"):
+                st.write(datos['causas'])
+                
+            with st.expander("🎯 Resultados Sugeridos (NOC)"):
+                st.info(datos['noc'])
+                
+            with st.expander("📋 Intervenciones Sugeridas (NIC)"):
+                st.success(datos['nic'])
+            st.markdown("###")
+            
     if not encontrado and busqueda != "":
-        st.error("❌ No se encontraron diagnósticos en este prototipo.")
+        st.error("❌ No se encontró ese diagnóstico en el prototipo. Intenta con 'Dolor', 'Infección' o 'Hipotermia'.")
