@@ -146,7 +146,7 @@ elif opcion == "🧠 Gestión del PAE":
         p_auto = st.slider("NOC [0305]: Autocuidado: Higiene", 1, 5, value=1, key="p_auto")
         act5 = st.checkbox("Asistir en el aseo general.", value=True, key="a5")
         act6 = st.checkbox("Monitorear integridad cutánea.", key="a6")
-        resumen_cuidados.append({"dx": "Déficit de autocuidado: Baño", "inicial": 1, "final": p_auto, "acts": [a for a, m in [("Asistencia en baño", act5), ("Monitoreo cutáneo", key="a6")] if m]})
+        resumen_cuidados.append({"dx": "Déficit de autocuidado: Baño", "inicial": 1, "final": p_auto, "acts": [a for a, m in [("Asistencia en baño", act5), ("Monitoreo cutáneo", key'=='"a6")] if m]})
 
     if dx_activos > 0:
         st.markdown("---")
