@@ -145,8 +145,8 @@ elif opcion == "🧠 Gestión del PAE":
         st.error("🚨 NANDA: [00108] Déficit de autocuidado: Baño")
         p_auto = st.slider("NOC [0305]: Autocuidado: Higiene", 1, 5, value=1, key="p_auto")
         act5 = st.checkbox("Asistir en el aseo general.", value=True, key="a5")
-        act6 = st.checkbox("Monitorear integridad cutánea.", key="a6")
-        resumen_cuidados.append({"dx": "Déficit de autocuidado: Baño", "inicial": 1, "final": p_auto, "acts": [a for a, m in [("Asistencia en baño", act5), ("Monitoreo cutáneo", key'=='"a6")] if m]})
+        act6 = st.checkbox("Monitorear integridad cutánea.", value=True, key="a6")
+        resumen_cuidados.append({"dx": "Déficit de autocuidado: Baño", "inicial": 1, "final": p_auto, "acts": [a for a, m in [("Asistencia en baño", act5), ("Monitoreo cutáneo", act6)] if m]})
 
     if dx_activos > 0:
         st.markdown("---")
@@ -183,7 +183,7 @@ elif opcion == "🧮 Calculadora de Goteo":
     st.info(f"💧 Velocidad de infusión: **{ml_hora:.1f} ml/hora**")
     st.success(f"⏱️ Ritmo de goteo: **{gotas_min:.0f} gotas por minuto**")
 
-# --- OPCIÓN 4: DICCIONARIO EXPANDIDO (NUEVO) ---
+# --- OPCIÓN 4: DICCIONARIO EXPANDIDO ---
 elif opcion == "📖 Diccionario NNN":
     st.title("📖 Vínculos NANDA, NOC y NIC")
     st.write("Consulta las definiciones y relaciones del lenguaje estandarizado.")
@@ -198,7 +198,6 @@ elif opcion == "📖 Diccionario NNN":
             st.error(f"📋 {datos['codigo']} {dx}")
             st.write(f"**Ubicación Taxonómica:** Dominio {datos['dominio']} | Clase {datos['clase']}")
             
-            # Sub-bloques organizados para la lectura clínica rápida
             with st.expander("📚 Ver Definición Oficial NANDA"):
                 st.write(datos['definicion'])
                 
