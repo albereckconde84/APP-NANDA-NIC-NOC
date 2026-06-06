@@ -2,43 +2,77 @@ import streamlit as st
 from datetime import datetime
 
 # Configuración de la pantalla móvil y estilo base
-st.set_page_config(page_title="SICE - Enfermería Pro", page_icon="🩺", layout="centered")
+st.set_page_config(page_title="SICE - UNEFA", page_icon="🩺", layout="centered")
 
-# --- DISEÑO ADAPTATIVO CON VARIABLES DE STREAMLIT ---
+# --- MAQUILLAJE VISUAL IDENTIDAD UNEFA (CSS PERSONALIZADO) ---
 st.markdown("""
     <style>
-    /* Ajustes generales del contenedor móvil */
+    /* Fondo limpio inspirado en la identidad UNEFA */
+    .stApp {
+        background-color: #f8fafc;
+    }
+    
+    /* Contenedor principal móvil */
     .main .block-container {
         padding-top: 1.5rem;
         max-width: 550px;
     }
     
-    /* Título principal con color adaptativo del tema */
-    .titulo-sice {
+    /* Título Institucional - Azul Oscuro UNEFA */
+    .titulo-unefa {
+        text-align: center;
+        font-family: 'Arial Black', Gadget, sans-serif;
+        color: #002855; /* Azul Oscuro Marino UNEFA */
+        font-size: 1.8rem;
+        margin-bottom: 5px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    
+    .subtitulo-unefa {
         text-align: center;
         font-family: 'Helvetica Neue', Arial, sans-serif;
-        font-weight: 700;
-        margin-bottom: 20px;
+        color: #0284c7; /* Azul Cian/Celeste UNEFA */
+        font-size: 1rem;
+        font-weight: bold;
+        margin-bottom: 25px;
     }
 
-    /* Botón moderno que respeta el contraste */
+    /* Tarjetas Blancas Premium para interactivos */
+    div.stSelectbox, div.stTextInput, div.stTextArea, div.stSlider {
+        background-color: #ffffff;
+        padding: 12px;
+        border-radius: 10px;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 2px 4px rgba(0, 32, 96, 0.04);
+        margin-bottom: 10px;
+    }
+
+    /* Botón de Acción Principal - Degradado de Azules UNEFA */
     div.stButton > button:first-child {
-        background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
-        color: white !important;
+        background: linear-gradient(135deg, #002855 0%, #0284c7 100%);
+        color: #ffffff !important;
         border: none;
-        padding: 12px 24px;
+        padding: 14px 28px;
         border-radius: 12px;
         font-weight: bold;
-        font-size: 1rem;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        transition: all 0.2s ease;
+        font-size: 1.05rem;
+        box-shadow: 0 4px 8px rgba(0, 40, 85, 0.25);
+        transition: all 0.3s ease;
         width: 100%;
         margin-top: 15px;
     }
     
     div.stButton > button:first-child:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 6px 12px rgba(2, 132, 199, 0.3);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 14px rgba(2, 132, 199, 0.35);
+        background: linear-gradient(135deg, #0284c7 0%, #002855 100%);
+    }
+
+    /* Color de los textos en los componentes para evitar bloqueos oscuros */
+    label, p, span {
+        color: #1e293b !important;
+        font-weight: 500;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -52,8 +86,8 @@ if "lista_pacientes" not in st.session_state:
 
 # --- MENÚ DE NAVEGACIÓN LATERAL ---
 with st.sidebar:
-    st.header("🏥 Menú SICE")
-    st.write("Sistema Integral de Cuidados")
+    st.markdown("<h2 style='color:#002855;'>🇻🇪 SICE UNEFA</h2>", unsafe_allow_html=True)
+    st.write("Sistema Integral de Cuidados de Enfermería")
     opcion = st.radio("Selecciona una función:", [
         "👥 Control de Pacientes",
         "🧠 Gestión del PAE",
@@ -98,16 +132,15 @@ diccionario_nanda = {
         "definicion": "Vulnerable a una invasión y multiplicación de organismos patógenos.",
         "causas": "Procedimientos invasivos, rotura de la integridad de la piel.",
         "noc": "[1902] Control del riesgo | [0703] Severidad de la infección",
-        "nic": "[6550] Protección contra las infections | [6540] Control de infecciones"
+        "nic": "[6550] Protección contra las infecciones | [6540] Control de infecciones"
     }
 }
 
 # --- OPCIÓN 1: CONTROL DE PACIENTES ---
 if opcion == "👥 Control de Pacientes":
-    st.markdown('<h1 class="titulo-sice">👥 Censo de Pacientes</h1>', unsafe_allow_html=True)
-    st.write("Gestiona los ingresos y asignación de camas en tu servicio.")
+    st.markdown('<div class="titulo-unefa">SICE - UNEFA</div>', unsafe_allow_html=True)
+    st.markdown('<div class="subtitulo-unefa">👥 CENSO DE PACIENTES</div>', unsafe_allow_html=True)
     
-    st.markdown("---")
     st.subheader("➕ Registrar Nuevo Ingreso")
     nueva_cama = st.text_input("Número de Cama / Ubicación:", placeholder="Ej: Cama 105")
     nuevo_nombre = st.text_input("Nombre del Paciente:", placeholder="Ej: Pedro José Infante")
@@ -131,7 +164,9 @@ if opcion == "👥 Control de Pacientes":
 
 # --- OPCIÓN 2: GESTIÓN DEL PAE ---
 elif opcion == "🧠 Gestión del PAE":
-    st.markdown('<h1 class="titulo-sice">🧠 Razonamiento Clínico</h1>', unsafe_allow_html=True)
+    st.markdown('<div class="titulo-unefa">SICE - UNEFA</div>', unsafe_allow_html=True)
+    st.markdown('<div class="subtitulo-unefa">🧠 RAZONAMIENTO CLÍNICO (PAE)</div>', unsafe_allow_html=True)
+    
     opciones_pacientes = [f"{p['cama']} - {p['nombre']}" for p in st.session_state.lista_pacientes]
     paciente_sel = st.selectbox("Evaluando al paciente:", opciones_pacientes)
     indice_sel = opciones_pacientes.index(paciente_sel)
@@ -180,10 +215,9 @@ elif opcion == "🧠 Gestión del PAE":
         p_auto = st.slider("NOC [0305]: Autocuidado: Higiene", 1, 5, value=1, key="p_auto")
         st.write("**NIC [1801]:**")
         act5 = st.checkbox("Asistir en el aseo general.", value=True, key="a5")
-        act6 = st.checkbox("Monitorear integridad cutánea.", value=True, key="a6")
+        act6 = st.checkbox("Monitorear integridad cutánea.", key="a6")
         resumen_cuidados.append({"dx": "Déficit de autocuidado: Baño", "inicial": 1, "final": p_auto, "acts": [a for a, m in [("Asistencia en baño", act5), ("Monitoreo cutáneo", act6)] if m]})
 
-    # Cerramos el bloque de diagnósticos e indicamos qué hacer si no hay ninguno marcado
     if dx_activos == 0:
         st.info("⏱️ **Esperando Valoración:** Selecciona arriba los signos y síntomas identificados en el paciente para calcular los diagnósticos de enfermería.")
     
@@ -210,7 +244,9 @@ elif opcion == "🧠 Gestión del PAE":
 
 # --- OPCIÓN 3: CALCULADORA DE GOTEO ---
 elif opcion == "🧮 Calculadora de Goteo":
-    st.markdown('<h1 class="titulo-sice">🧮 Calculadora de Infusión</h1>', unsafe_allow_html=True)
+    st.markdown('<div class="titulo-unefa">SICE - UNEFA</div>', unsafe_allow_html=True)
+    st.markdown('<div class="subtitulo-unefa">🧮 CALCULADORA DE INFUSIÓN</div>', unsafe_allow_html=True)
+    
     volumen = st.number_input("Volumen de la solución (ml):", min_value=1, value=500)
     horas = st.number_input("Tiempo de infusión (Horas):", min_value=1, value=8)
     ml_hora = volumen / horas
@@ -221,7 +257,9 @@ elif opcion == "🧮 Calculadora de Goteo":
 
 # --- OPCIÓN 4: DICCIONARIO NNN ---
 elif opcion == "📖 Diccionario NNN":
-    st.markdown('<h1 class="titulo-sice">📖 Vínculos NANDA, NOC y NIC</h1>', unsafe_allow_html=True)
+    st.markdown('<div class="titulo-unefa">SICE - UNEFA</div>', unsafe_allow_html=True)
+    st.markdown('<div class="subtitulo-unefa">📖 VÍNCULOS NANDA, NOC Y NIC</div>', unsafe_allow_html=True)
+    
     busqueda = st.text_input("🔍 Busca por nombre o código (Ej: Dolor, Hipotermia):")
     st.markdown("---")
     
