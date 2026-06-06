@@ -55,8 +55,56 @@ if opcion == "👥 Control de Pacientes":
 
 elif opcion == "🧠 Gestión del PAE":
     st.markdown('<div class="titulo-principal">Proceso de Atención</div>', unsafe_allow_html=True)
-    # (Aquí mantienes tu lógica de checkboxes y SOAPIE que tenías antes)
-    st.info("Módulo PAE listo para usar. Asegúrate de tener los síntomas marcados arriba.")
+    st.markdown('<div class="subtitulo-principal">🧠 RAZONAMIENTO CLÍNICO</div>', unsafe_allow_html=True)
+    
+    # Selección de paciente
+    opciones_pacientes = [f"{p['cama']} - {p['nombre']}" for p in st.session_state.lista_pacientes]
+    paciente_sel = st.selectbox("Evaluando al paciente:", opciones_pacientes)
+    indice_sel = opciones_pacientes.index(paciente_sel)
+    paciente_actual = st.session_state.lista_pacientes[indice_sel]
+    
+    st.subheader(f"📌 Plan: {paciente_actual['nombre']} ({paciente_actual['cama']})")
+    st.markdown("---")
+    
+    # --- AQUÍ VA TU LÓGICA DE CHECKS Y FORMULARIO ---
+    st.markdown("### 1. Valoración (Signos y Síntomas)")
+    sintoma_frio = st.checkbox("Temperatura corporal < 36.5 °C / Piel fría")
+    sintoma_escalofrio = st.checkbox("Escalofríos o Cianosis periférica")
+    sintoma_respiratorio = st.checkbox("Pausas respiratorias (Apnea) o Disnea")
+    sintoma_oxigeno = st.checkbox("Baja saturación de oxígeno (SpO2 < 90%)")
+    sintoma_autocuidado = st.checkbox("Incapacidad para realizar higiene por sí mismo")
+    sintoma_atencion = st.checkbox("Dificultad para concentrarse / Omisión de tareas")
+
+    st.markdown("---")
+    st.markdown("### 2. Diagnóstico y Planificación")
+    
+    dx_activos = 0
+    resumen_cuidados = []
+
+    if sintoma_frio or sintoma_escalofrio:
+        dx_activos += 1
+        st.error("🚨 **NANDA DETECTADO:** [00006] Hipotermia")
+        p_hipo = st.slider("NOC [0800]: Temperatura cutánea", 1, 5, value=2, key="p_hipo")
+        act1 = st.checkbox("Monitorear temperatura cada 15-30 min.", value=True, key="a1")
+        act2 = st.checkbox("Aplicar mantas calientes.", key="a2")
+        lista_acts = ["Monitoreo de temp." if act1 else "", "Mantas calientes" if act2 else ""]
+        resumen_cuidados.append({"dx": "Hipotermia", "inicial": 2, "final": p_hipo, "acts": [a for a in lista_acts if a]})
+
+    if sintoma_respiratorio or sintoma_oxigeno:
+        dx_activos += 1
+        st.error("🚨 **NANDA DETECTADO:** [00032] Patrón respiratorio ineficaz")
+        p_apnea = st.slider("NOC [0415]: Estado respiratorio", 1, 5, value=2, key="p_apnea")
+        act3 = st.checkbox("Vigilar esfuerzo respiratorio.", value=True, key="a3")
+        act4 = st.checkbox("Administrar oxígeno.", key="a4")
+        lista_acts = ["Vigilar esfuerzo resp." if act3 else "", "Oxigenoterapia" if act4 else ""]
+        resumen_cuidados.append({"dx": "Patrón respiratorio ineficaz", "inicial": 2, "final": p_apnea, "acts": [a for a in lista_acts if a]})
+
+    if dx_activos > 0:
+        if st.button("💾 Finalizar Turno y Registrar"):
+            st.success("✅ Proceso completado.")
+            # Aquí generas el SOAPIE que ya tenías
+            st.write("---")
+            st.text_area("Nota SOAPIE (Análisis):", value="Análisis generado automáticamente basado en síntomas marcados.")
 
 elif opcion == "🧮 Calculadora de Goteo":
     st.markdown('<div class="titulo-principal">Calculadora</div>', unsafe_allow_html=True)
