@@ -77,43 +77,15 @@ with st.sidebar:
     enfermero = st.text_input("👤 Profesional de Guardia:", "Enf. Alexander")
 
 # --- BASE DE DATOS CLÍNICA (Diccionario NNN) ---
-diccionario_nanda = {
-    "Hipotermia": {
-        "codigo": "[00006]", "dominio": "11", "clase": "6",
-        "definicion": "Temperatura corporal central por debajo del rango de variación normal debido a la falla de la termorregulación.",
-        "causas": "Exposición al entorno frío, desnutrición, trauma, inactividad.",
-        "noc": "[0800] Termorregulación | [0801] Termorregulación: recién nacido",
-        "nic": "[3900] Regulación de la temperatura | [3800] Tratamiento de la hipotermia"
-    },
-    "Patrón respiratorio ineficaz": {
-        "codigo": "[00032]", "dominio": "4", "clase": "4",
-        "definicion": "La inspiración y/o espiración no proporciona una ventilación adecuada.",
-        "causas": "Ansiedad, deformidad de la pared torácica, fatiga de los músculos respiratorios.",
-        "noc": "[0415] Estado respiratorio | [0403] Estado respiratorio: ventilación",
-        "nic": "[3350] Monitorización respiratoria | [3140] Manejo de la vía aérea"
-    },
-    "Déficit de autocuidado: Baño": {
-        "codigo": "[00108]", "dominio": "4", "clase": "5",
-        "definicion": "Deterioro de la capacidad para realizar o completar por sí mismo las actividades de baño/higiene.",
-        "causas": "Debilidad, trastornos cognitivos, barreras ambientales, dolor.",
-        "noc": "[0305] Autocuidado: Higiene | [0300] Autocuidado: AVDI",
-        "nic": "[1801] Ayuda con el autocuidado: Baño/Higiene"
-    },
-    "Dolor agudo": {
-        "codigo": "[00132]", "dominio": "12", "clase": "1",
-        "definicion": "Experiencia sensitiva y emocional desagradable aproximada a un daño tisular real o potencial.",
-        "causas": "Agentes lesivos biológicos, químicos, físicos o psicológicos.",
-        "noc": "[1605] Control del dolor | [2102] Nivel del dolor",
-        "nic": "[1400] Manejo del dolor | [2210] Administración de analgésicos"
-    },
-    "Riesgo de infección": {
-        "codigo": "[00004]", "dominio": "11", "clase": "1",
-        "definicion": "Vulnerable a una invasión y multiplicación de organismos patógenos.",
-        "causas": "Procedimientos invasivos, rotura de la integridad de la piel.",
-        "noc": "[1902] Control del riesgo | [0703] Severidad de la infección",
-        "nic": "[6550] Protección contra las infecciones | [6540] Control de infecciones"
-    }
-}
+import json
+
+# Función para cargar los cientos de diagnósticos eficientemente
+@st.cache_data
+def cargar_nanda():
+    with open("nanda_data.json", "r", encoding="utf-8") as f:
+        return json.load(f)
+
+diccionario_nanda = cargar_nanda()
 
 # --- OPCIÓN 1: CONTROL DE PACIENTES ---
 if opcion == "👥 Control de Pacientes":
