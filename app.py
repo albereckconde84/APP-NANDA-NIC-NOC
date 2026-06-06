@@ -1,49 +1,78 @@
 import streamlit as st
 import json
 
-# Cargar los datos desde el JSON actualizado
+# Configuración de página
+st.set_page_config(page_title="Sistema de Gestión de Cuidado", layout="wide")
+
+# Cargar datos
+@st.cache_data
 def cargar_datos():
     with open("nanda_data.json", "r", encoding="utf-8") as f:
         return json.load(f)
 
 data = cargar_datos()
 
-st.title("🩺 Sistema de Gestión de Cuidado (PAE)")
-
-# --- 1. SECCIÓN DE VALORACIÓN (EL CORAZÓN DEL CUIDADO) ---
-st.header("📝 Valoración de Enfermería")
-with st.form("formulario_valoracion"):
-    col1, col2 = st.columns(2)
-    with col1:
-        st.subheader("Datos Subjetivos")
-        subjetivo = st.text_area("¿Qué refiere el paciente? (Dolor, malestar, etc.)")
-    with col2:
-        st.subheader("Datos Objetivos")
-        frecuencia_cardiaca = st.number_input("Frecuencia Cardíaca (lpm)", min_value=0)
-        tension_arterial = st.text_input("Tensión Arterial (mmHg)")
-        otros_signos = st.text_area("Otros hallazgos (Piel, movilidad, etc.)")
+# Lógica de Sugerencia Automática
+def sugerir_diagnostico(texto_subjetivo, texto_objetivo):
+    texto_total = (texto_subjetivo + " " + texto_objetivo).lower()
     
-    enviar_valoracion = st.form_submit_button("Guardar Valoración y Analizar")
+    if "frío" in texto_total or "temperatura baja" in texto_total:
+        return "Hipotermia"
+    elif "calor" in texto_total or "fiebre" in texto_total:
+        return "Hipertermia"
+    elif "dolor" in texto_total:
+        return "Dolor agudo"
+    elif "respiración" in texto_total or "aire" in texto_total:
+        return "Patrón respiratorio ineficaz"
+    elif "infección" in texto_total or "herida" in texto_total:
+        return "Riesgo de infección"
+    return None
 
-# --- 2. LÓGICA DE ANÁLISIS ---
-if enviar_valoracion:
-    if not subjetivo or not tension_arterial:
-        st.warning("⚠️ Debes completar los datos mínimos de valoración para un diagnóstico preciso.")
-    else:
-        st.success("Valoración guardada correctamente.")
+# Título y navegación
+st.title("🩺 Sistema de Gestión de Cuidado (PAE)")
+opcion = st.sidebar.radio("Menú", ["🧠 Gestión del PAE", "Otras Herramientas"])
+
+if opcion == "🧠 Gestión del PAE":
+    st.header("📝 Valoración de Enfermería")
+    
+    with st.form("formulario_valoracion"):
+        col1, col2 = st.columns(2)
+        with col1:
+            subjetivo = st.text_area("S: ¿Qué refiere el paciente?")
+        with col2:
+            objetivo = st.text_area("O: Hallazgos objetivos (Signos vitales, piel)")
         
-        # --- 3. SELECCIÓN DE DIAGNÓSTICO (NANDA) ---
-        st.header("📋 Diagnóstico NANDA sugerido")
-        # Aquí permitimos al usuario elegir basándose en la valoración previa
-        seleccion = st.selectbox("Seleccione el diagnóstico basado en los hallazgos:", list(data.keys()))
-        
-        # Mostrar detalles del diagnóstico seleccionado
-        diag = data[seleccion]
-        st.info(f"**Código:** {diag['codigo']} | **Dominio:** {diag['dominio']} | **Clase:** {diag['clase']}")
-        st.write(f"**Definición:** {diag['definicion']}")
-        st.write(f"**Factores:** {diag['causas']}")
-        
-        # --- 4. PLAN DE CUIDADO (NOC/NIC) ---
-        st.header("🚀 Plan de Cuidados (SOAPIE)")
-        st.write(f"**NOC:** {diag['noc']}")
-        st.write(f"**NIC:** {diag['nic']}")
+        submitted = st.form_submit_button("Analizar Datos Clínicos")
+    
+    if submitted:
+        if not subjetivo or not objetivo:
+            st.error("⚠️ Debes completar los datos subjetivos y objetivos para el análisis.")
+        else:
+            st.success("Valoración capturada.")
+            
+            sugerencia = sugerir_diagnostico(subjetivo, objetivo)
+            
+            if sugerencia:
+                st.info(f"🔍 El sistema sugiere: **{sugerencia}**")
+                seleccion = sugerencia
+            else:
+                seleccion = st.selectbox("Seleccione diagnóstico manualmente:", list(data.keys()))
+            
+            # Despliegue de resultados
+            diag = data[seleccion]
+            st.markdown(f"### [ {diag['codigo']} ] {seleccion}")
+            st.write(f"**Dominio:** {diag['dominio']} | **Clase:** {diag['clase']}")
+            
+            with st.expander("📖 Ver detalles técnicos"):
+                st.write(f"**Definición:** {diag['definicion']}")
+                st.write(f"**Causas:** {diag['causas']}")
+            
+            st.markdown("---")
+            st.subheader("🚀 Plan de Cuidados (SOAPIE)")
+            st.write(f"**🎯 NOC:** {diag['noc']}")
+            st.write(f"**📋 NIC:** {diag['nic']}")
+            
+            st.caption("Nota: Los diagnósticos son sugerencias basadas en NANDA-I 2021-2023 y requieren validación profesional.")
+
+elif opcion == "Otras Herramientas":
+    st.write("Aquí puedes colocar el resto de tus funciones previas.")
