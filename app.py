@@ -13,7 +13,7 @@ st.markdown("""
         max-width: 550px;
     }
     
-    /* Título Institucional - Azul Oscuro UNEFA (Dinámico/Adaptativo si es posible) */
+    /* Título Institucional - Azul Oscuro UNEFA */
     .titulo-unefa {
         text-align: center;
         font-family: 'Arial Black', Gadget, sans-serif;
@@ -223,24 +223,23 @@ elif opcion == "🧠 Gestión del PAE":
             s_text = "Paciente refiere sintomatología asociada al motivo de ingreso."
             o_text = f"Evidencias clínicas evaluadas en la {paciente_actual['cama']} por el {enfermero}."
             
-            # Formatear strings de forma segura
             lista_dxs = [item['dx'] for item in resumen_cuidados]
-            a_text = ", ".join(lista_dxs)
+            a_text = f"Diagnósticos: {', '.join(lista_dxs)}"
             p_text = "Restablecer patrones biológicos alterados."
             
             todas_las_acts = []
             for item in resumen_cuidados:
                 todas_las_acts.extend(item['acts'])
-            i_text = ", ".join(todas_las_acts)
+            i_text = f"Se ejecutó: {', '.join(todas_las_acts)}"
             
             lista_evs = [f"Evolución NOC de {item['dx']}: {item['inicial']}/5 a {item['final']}/5" for item in resumen_cuidados]
             e_text = ", ".join(lista_evs)
             
             st.text_area("S (Subjetivo):", s_text, height=60)
             st.text_area("O (Objetivo):", o_text, height=60)
-            st.text_area("A (Análisis/DxE):", f"Diagnósticos: {a_text}", height=60)
+            st.text_area("A (Análisis/DxE):", a_text, height=60)
             st.text_area("P (Planificación):", p_text, height=60)
-            st.text_area("I (Intervención):", f"Se ejecutó: {i_text}", height=60)
+            st.text_area("I (Intervención):", i_text, height=60)
             st.text_area("E (Evaluación):", e_text, height=60)
 
 # --- OPCIÓN 3: CALCULADORA DE GOTEO ---
@@ -266,21 +265,4 @@ elif opcion == "📖 Diccionario NNN":
     
     encontrado = False
     for dx, datos in diccionario_nanda.items():
-        if busqueda.lower() in dx.lower() or busqueda.lower() in datos['codigo']:
-            encontrado = True
-            
-            st.markdown(f"### 📋 {datos['codigo']} {dx}")
-            st.caption(f"**Ubicación:** Dominio {datos['dominio']} | Clase {datos['clase']}")
-            
-            with st.expander("📚 Ver Definición Oficial NANDA"):
-                st.write(datos['definicion'])
-            with st.expander("🧬 Factores Relacionados / Causas"):
-                st.write(datos['causas'])
-            with st.expander("🎯 Resultados Sugeridos (NOC)"):
-                st.write(datos['noc'])
-            with st.expander("📋 Intervenciones Sugeridas (NIC)"):
-                st.write(datos['nic'])
-            st.markdown("---")
-            
-    if not encontrado and busqueda != "":
-        st.error("❌ No se encontró ese diagnóstico en el prototipo.")
+        if busqueda.lower() in dx.lower() or busqueda.lower()
