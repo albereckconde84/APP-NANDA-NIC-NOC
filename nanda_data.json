@@ -1,0 +1,20 @@
+{
+  "Hipotermia": {
+    "codigo": "[00006]",
+    "dominio": "11",
+    "clase": "6",
+    "definicion": "Temperatura corporal central por debajo del rango de variación normal...",
+    "causas": "Exposición al entorno frío, desnutrición, trauma...",
+    "noc": "[0800] Termorregulación",
+    "nic": "[3900] Regulación de la temperatura"
+  },
+  "Dolor agudo": {
+    "codigo": "[00132]",
+    "dominio": "12",
+    "clase": "1",
+    "definicion": "Experiencia sensitiva y emocional desagradable...",
+    "causas": "Agentes lesivos biológicos, químicos...",
+    "noc": "[1605] Control del dolor",
+    "nic": "[1400] Manejo del dolor"
+  }
+}
