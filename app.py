@@ -1,13 +1,13 @@
 import streamlit as st
 from datetime import datetime
 
-# Configuración de la pantalla móvil y estilo base
+# Configuración de la interfaz móvil y estilo base institucional
 st.set_page_config(page_title="SICE - UNEFA", page_icon="🩺", layout="centered")
 
-# --- MAQUILLAJE VISUAL ADAPTATIVO UNEFA (MANTIE_NE EL CONTRASTE) ---
+# --- IDENTIDAD VISUAL UNEFA AUTOMÁTICA Y SEGURA ---
 st.markdown("""
     <style>
-    /* Contenedor principal móvil */
+    /* Ajuste del contenedor principal para dispositivos móviles */
     .main .block-container {
         padding-top: 1.5rem;
         max-width: 550px;
@@ -17,28 +17,24 @@ st.markdown("""
     .titulo-unefa {
         text-align: center;
         font-family: 'Arial Black', Gadget, sans-serif;
-        color: #002855; /* Azul Oscuro Marino UNEFA */
+        color: #002855; 
         font-size: 1.8rem;
         margin-bottom: 5px;
         text-transform: uppercase;
         letter-spacing: 1px;
     }
     
+    /* Subtítulo de Sección - Azul Cian UNEFA */
     .subtitulo-unefa {
         text-align: center;
         font-family: 'Helvetica Neue', Arial, sans-serif;
-        color: #0284c7; /* Azul Cian/Celeste UNEFA */
+        color: #0284c7; 
         font-size: 1rem;
         font-weight: bold;
         margin-bottom: 25px;
     }
 
-    /* Forzar que los títulos de sección se lean siempre bien */
-    h1, h2, h3, h4 {
-        color: inherit !important;
-    }
-
-    /* Botón de Acción Principal - Degradado de Azules UNEFA */
+    /* Botón de Acción Estilo UNEFA con Alto Contraste */
     div.stButton > button:first-child {
         background: linear-gradient(135deg, #002855 0%, #0284c7 100%);
         color: #ffffff !important;
@@ -57,13 +53,6 @@ st.markdown("""
         transform: translateY(-2px);
         box-shadow: 0 6px 14px rgba(2, 132, 199, 0.35);
         background: linear-gradient(135deg, #0284c7 0%, #002855 100%);
-    }
-
-    /* CORRECCIÓN DE CONTRASTE: Dejamos que Streamlit maneje el color 
-       del texto interno de los inputs usando sus variables nativas */
-    div.stSelectbox input, div.stTextInput input, div.stTextArea textarea {
-        color: var(--text-color) !important;
-        background-color: var(--background-color) !important;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -88,7 +77,7 @@ with st.sidebar:
     st.markdown("---")
     enfermero = st.text_input("👤 Profesional de Guardia:", "Enf. Alexander")
 
-# --- BASE DE DATOS (Diccionario Clínico) ---
+# --- BASE DE DATOS CLINICA (Diccionario NNN) ---
 diccionario_nanda = {
     "Hipotermia": {
         "codigo": "[00006]", "dominio": "11", "clase": "6",
@@ -170,7 +159,7 @@ elif opcion == "🧠 Gestión del PAE":
     sintoma_frio = st.checkbox("Temperatura corporal < 36.5 °C / Piel fría")
     sintoma_escalofrio = st.checkbox("Escalofríos o Cianosis periférica")
     sintoma_respiratorio = st.checkbox("Pausas respiratorias (Apnea) o Disnea")
-    sintoma_oxigeno = st.checkbox("Baja saturación de oxígeno ($SpO_2 < 90\%$)")
+    sintoma_oxigeno = st.checkbox("Baja saturación de oxígeno (SpO2 < 90%)")
     sintoma_autocuidado = st.checkbox("Incapacidad para realizar higiene por sí mismo")
     sintoma_atencion = st.checkbox("Dificultad para concentrarse / Omisión de tareas")
 
@@ -209,4 +198,23 @@ elif opcion == "🧠 Gestión del PAE":
         act6 = st.checkbox("Monitorear integridad cutánea.", value=True, key="a6")
         resumen_cuidados.append({"dx": "Déficit de autocuidado: Baño", "inicial": 1, "final": p_auto, "acts": [a for a, m in [("Asistencia en baño", act5), ("Monitoreo cutáneo", act6)] if m]})
 
-    if dx_activos
+    if dx_activos == 0:
+        st.info("⏱️ **Esperando Valoración:** Selecciona arriba los signos y síntomas identificados en el paciente.")
+    
+    else:
+        st.markdown("---")
+        st.markdown("### 3. Registro de Evaluación")
+        if st.button("💾 Finalizar Turno y Registrar Cuidados"):
+            st.success("✅ **Proceso de Atención de Enfermería completado.**")
+            st.markdown(f"### 📝 Nota de Enfermería (SOAPIE)")
+            
+            s_text = "Paciente refiere sintomatología asociada al motivo de ingreso."
+            o_text = f"Evidencias clínicas evaluadas en la {paciente_actual['cama']} por el {enfermero}."
+            a_text = ", ".join([item['dx'] for item in resumen_cuidados])
+            p_text = "Restablecer patrones biológicos alterados."
+            i_text = ". ".join([", ".join(item['acts']) for item in resumen_cuidados if item['acts']])
+            e_text = ", ".join([f"Evolución NOC de {item['dx']}: {item['inicial']}/5 a {item['final']}/5" for item in resumen_cuidados])
+            
+            st.text_area("S (Subjetivo):", s_text, height=60)
+            st.text_area("O (Objetivo):", o_text, height=60)
+            st.text_area("A (Análisis/DxE):", f"Diagnósticos de Enfermería: {a_text}", height
