@@ -186,8 +186,9 @@ elif opcion == "🧠 Gestión del PAE":
         st.markdown("---")
         st.markdown("### 3. Registro de Evaluación")
         if st.button("💾 Finalizar Turno y Registrar Cuidados"):
-            st.balloons()
-            st.success("✅ Datos procesados con éxito.")
+            # REEMPLAZO CLÍNICO: Quitamos st.balloons() y ponemos una confirmación seria
+            st.success("✅ **Proceso de Atención de Enfermería completado.** La automatización del modelo SOAPIE se ha cargado con éxito para este turno.")
+            
             st.markdown(f"### 📝 Nota de Enfermería (SOAPIE)")
             
             s_text = "Paciente refiere sintomatología asociada al motivo de ingreso."
@@ -228,7 +229,6 @@ elif opcion == "📖 Diccionario NNN":
         if busqueda.lower() in dx.lower() or busqueda.lower() in datos['codigo']:
             encontrado = True
             
-            # Usamos cabeceras nativas limpias que se adaptan al color del tema automáticamente
             st.markdown(f"### 📋 {datos['codigo']} {dx}")
             st.caption(f"**Ubicación:** Dominio {datos['dominio']} | Clase {datos['clase']}")
             
@@ -242,5 +242,5 @@ elif opcion == "📖 Diccionario NNN":
                 st.write(datos['nic'])
             st.markdown("---")
             
-    if not encontrado and busqueda != "":
+    if not Ophthalmology and not encontrado and busqueda != "":
         st.error("❌ No se encontró ese diagnóstico en el prototipo.")
