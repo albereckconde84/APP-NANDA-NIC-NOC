@@ -1,1 +1,146 @@
-
+{
+  "Hipotermia": {
+    "codigo": "[00006]",
+    "dominio": "11",
+    "clase": "6",
+    "definicion": "Temperatura corporal central por debajo del rango de variación normal debido a una falla de la termorregulación.",
+    "causas": "Exposición a entornos fríos, ropa inadecuada, desnutrición, envejecimiento, inactividad física.",
+    "noc": "[0800] Termorregulación | [0802] Signos vitales estables",
+    "nic": "[3900] Regulación de la temperatura | [3800] Tratamiento de la hipotermia con medios físicos"
+  },
+  "Hipertermia": {
+    "codigo": "[00007]",
+    "dominio": "11",
+    "clase": "6",
+    "definicion": "Temperatura corporal central por encima del rango de variación normal debido al fracaso de la termorregulación.",
+    "causas": "Deshidratación, exposición a ambientes cálidos, actividad física vigorosa, medicamentos, ropa inapropiada.",
+    "noc": "[0800] Termorregulación | [0601] Equilibrio hídrico corporal",
+    "nic": "[3740] Tratamiento de la fiebre | [4120] Manejo de líquidos y control de electrolitos"
+  },
+  "Patrón respiratorio ineficaz": {
+    "codigo": "[00032]",
+    "dominio": "4",
+    "clase": "4",
+    "definicion": "La inspiración y/o espiración no proporciona una ventilación adecuada para los requerimientos metabólicos.",
+    "causas": "Ansiedad, deformidad de la pared torácica, fatiga de los músculos respiratorios, dolor, hiperventilación.",
+    "noc": "[0415] Estado respiratorio general | [0403] Estado respiratorio: ventilación pulmonar",
+    "nic": "[3350] Monitorización respiratoria continua | [3140] Manejo de la vía aérea e hidratación"
+  },
+  "Deterioro del intercambio de gases": {
+    "codigo": "[00030]",
+    "dominio": "3",
+    "clase": "4",
+    "definicion": "Exceso o déficit en la oxigenación y/o en la eliminación del dióxido de carbono en la membrana alvéolo-capilar.",
+    "causas": "Desequilibrio en la ventilación-perfusión, cambios en la membrana alvéolo-capilar, fatiga muscular.",
+    "noc": "[0402] Estado respiratorio: intercambio gaseoso | [0411] Respuesta alérgica sistémica",
+    "nic": "[3320] Oxigenoterapia preventiva y correctiva | [3140] Manejo de las vías aéreas"
+  },
+  "Dolor agudo": {
+    "codigo": "[00132]",
+    "dominio": "12",
+    "clase": "1",
+    "definicion": "Experiencia sensitiva y emocional desagradable asociada a una lesión tisular real o potencial.",
+    "causas": "Agentes lesivos biológicos, químicos, físicos (traumatismos, procedimientos quirúrgicos) o psicológicos.",
+    "noc": "[1605] Control del dolor por parte del paciente | [2102] Nivel de dolor registrado",
+    "nic": "[1400] Manejo del dolor y confort | [2210] Administración analgésica según orden médica"
+  },
+  "Dolor crónico": {
+    "codigo": "[00133]",
+    "dominio": "12",
+    "clase": "1",
+    "definicion": "Experiencia sensitiva y emocional desagradable asociada a lesión tisular real o potencial de inicio súbito o lento, con duración mayor a 3 meses.",
+    "causas": "Incapacidad física o psicosocial prolongada, agentes lesivos crónicos, síndromes de dolor idiopático.",
+    "noc": "[2008] Estado de comodidad física | [1605] Control del dolor crónico",
+    "nic": "[1400] Manejo del dolor a largo plazo | [5440] Aumentar el afrontamiento familiar"
+  },
+  "Riesgo de infección": {
+    "codigo": "[00004]",
+    "dominio": "11",
+    "clase": "1",
+    "definicion": "Vulnerable a una invasión y multiplicación de organismos patógenos que pueden comprometer la salud corporal.",
+    "causas": "Procedimientos invasivos, rotura de la integridad cutánea (heridas), defensas primarias inadecuadas.",
+    "noc": "[1902] Control del riesgo infeccioso | [0703] Severidad de la infección clínica",
+    "nic": "[6550] Protección contra infecciones | [6540] Control estricto de infecciones y lavado de manos"
+  },
+  "Déficit de autocuidado: Baño": {
+    "codigo": "[00108]",
+    "dominio": "4",
+    "clase": "5",
+    "definicion": "Deterioro de la capacidad del individuo para realizar o completar por sí mismo las actividades de baño e higiene.",
+    "causas": "Debilidad motora, trastornos cognitivos, barreras ambientales, dolor agudo, fatiga extrema.",
+    "noc": "[0305] Autocuidado: Higiene corporal general | [0300] Autocuidado: Actividades de la vida diaria",
+    "nic": "[1801] Ayuda con el autocuidado: Baño e higiene en cama o ducha"
+  },
+  "Déficit de autocuidado: Alimentación": {
+    "codigo": "[00102]",
+    "dominio": "4",
+    "clase": "5",
+    "definicion": "Deterioro de la capacidad para realizar o completar por sí mismo las actividades de alimentación.",
+    "causas": "Debilidad muscular generalizada, deterioro neuromuscular, ansiedad severa, barreras físicas.",
+    "noc": "[0303] Autocuidado: Comer y deglutir | [1008] Estado nutricional del paciente",
+    "nic": "[1803] Ayuda con el autocuidado: Alimentación guiada | [1050] Alimentación enteral/parenteral"
+  },
+  "Nausea": {
+    "codigo": "[00134]",
+    "dominio": "12",
+    "clase": "1",
+    "definicion": "Fenómeno subjetivo desagradable, en la parte posterior de la garganta y el estómago, que puede o no provocar el vómito.",
+    "causas": "Distensión gástrica, irritación gastrointestinal, efectos farmacológicos, quimioterapia, ansiedad.",
+    "noc": "[2106] Efectos nocivos de la medicación | [2107] Severidad de las náuseas y vómitos",
+    "nic": "[1450] Manejo de las náuseas | [1570] Manejo del vómito y reposición de líquidos"
+  },
+  "Diarrea": {
+    "codigo": "[00013]",
+    "dominio": "3",
+    "clase": "2",
+    "definicion": "Eliminación de heces líquidas o no formadas tres o más veces en un período de 24 horas.",
+    "causas": "Infecciones gastrointestinales, efectos secundarios de medicamentos, malabsorción, estrés psicológico.",
+    "noc": "[0501] Eliminación intestinal regular | [0601] Equilibrio hídrico e hidratación",
+    "nic": "[0460] Manejo de la diarrea | [4120] Manejo de líquidos y balance electrolítico"
+  },
+  "Estreñimiento": {
+    "codigo": "[00011]",
+    "dominio": "3",
+    "clase": "2",
+    "definicion": "Disminución de la frecuencia normal de defecación, acompañada de eliminación dificultosa o incompleta de heces.",
+    "causas": "Actividad física insuficiente, aporte de líquidos insuficiente, dieta baja en fibra, estrés.",
+    "noc": "[0501] Eliminación intestinal adecuada | [2109] Nivel de malestar físico",
+    "nic": "[0450] Manejo del estreñimiento/impactación | [0430] Gestión de la defecación e hidratación"
+  },
+  "Deterioro de la integridad cutánea": {
+    "codigo": "[00046]",
+    "dominio": "11",
+    "clase": "2",
+    "definicion": "Alteración o daño de la epidermis y/o de la dermis (úlceras, heridas, escoriaciones).",
+    "causas": "Inmovilidad física, humedad constante, fuerzas de cizallamiento, desnutrición, presión prolongada.",
+    "noc": "[1101] Integridad de la piel y membranas mucosas | [1102] Curación de heridas por primera intención",
+    "nic": "[3590] Vigilancia de la piel lesionada | [3520] Cuidados de las úlceras por presión/heridas"
+  },
+  "Ansiedad": {
+    "codigo": "[00146]",
+    "dominio": "9",
+    "clase": "2",
+    "definicion": "Vaga sensación de malestar o amenaza acompañada de una respuesta autonómica, cuyo origen con frecuencia es desconocido.",
+    "causas": "Crisis situacionales, factores estresantes, cambios en el estado de salud, amenaza de muerte.",
+    "noc": "[1402] Autocontrol de la ansiedad | [1211] Nivel de miedo y angustia",
+    "nic": "[5820] Disminución de la ansiedad con escucha activa | [5270] Apoyo emocional al paciente"
+  },
+  "Riesgo de caídas": {
+    "codigo": "[00155]",
+    "dominio": "11",
+    "clase": "2",
+    "definicion": "Vulnerable a un aumento de la susceptibilidad a las caídas, que pueden causar daño físico.",
+    "causas": "Entorno abarrotado, debilidad en las extremidades inferiores, alteración del equilibrio, hipotensión.",
+    "noc": "[1912] Caídas prevenidas en sala | [1902] Control del riesgo de accidentes",
+    "nic": "[6490] Prevención de caídas en entornos clínicos | [6486] Manejo ambiental: seguridad del paciente"
+  },
+  "Deterioro de la movilidad física": {
+    "codigo": "[00085]",
+    "dominio": "4",
+    "clase": "2",
+    "definicion": "Limitación del movimiento físico independiente y intencionado del cuerpo o de una o más extremidades.",
+    "causas": "Deterioro neuromuscular, dolor severo, rigidez articular, prescripción de reposo absoluto.",
+    "noc": "[0208] Movilidad física general | [0204] Consecuencias de la inmovilidad: fisiológicas",
+    "nic": "[0221] Terapia de ejercicios: deambulación asistida | [1400] Manejo del dolor motor"
+  }
+}
