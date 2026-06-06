@@ -4,14 +4,9 @@ from datetime import datetime
 # Configuración de la pantalla móvil y estilo base
 st.set_page_config(page_title="SICE - UNEFA", page_icon="🩺", layout="centered")
 
-# --- MAQUILLAJE VISUAL IDENTIDAD UNEFA (CSS PERSONALIZADO) ---
+# --- MAQUILLAJE VISUAL ADAPTATIVO UNEFA (MANTIE_NE EL CONTRASTE) ---
 st.markdown("""
     <style>
-    /* Fondo limpio inspirado en la identidad UNEFA */
-    .stApp {
-        background-color: #f8fafc;
-    }
-    
     /* Contenedor principal móvil */
     .main .block-container {
         padding-top: 1.5rem;
@@ -38,14 +33,9 @@ st.markdown("""
         margin-bottom: 25px;
     }
 
-    /* Tarjetas Blancas Premium para interactivos */
-    div.stSelectbox, div.stTextInput, div.stTextArea, div.stSlider {
-        background-color: #ffffff;
-        padding: 12px;
-        border-radius: 10px;
-        border: 1px solid #e2e8f0;
-        box-shadow: 0 2px 4px rgba(0, 32, 96, 0.04);
-        margin-bottom: 10px;
+    /* Forzar que los títulos de sección se lean siempre bien */
+    h1, h2, h3, h4 {
+        color: inherit !important;
     }
 
     /* Botón de Acción Principal - Degradado de Azules UNEFA */
@@ -69,10 +59,11 @@ st.markdown("""
         background: linear-gradient(135deg, #0284c7 0%, #002855 100%);
     }
 
-    /* Color de los textos en los componentes para evitar bloqueos oscuros */
-    label, p, span {
-        color: #1e293b !important;
-        font-weight: 500;
+    /* CORRECCIÓN DE CONTRASTE: Dejamos que Streamlit maneje el color 
+       del texto interno de los inputs usando sus variables nativas */
+    div.stSelectbox input, div.stTextInput input, div.stTextArea textarea {
+        color: var(--text-color) !important;
+        background-color: var(--background-color) !important;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -86,7 +77,7 @@ if "lista_pacientes" not in st.session_state:
 
 # --- MENÚ DE NAVEGACIÓN LATERAL ---
 with st.sidebar:
-    st.markdown("<h2 style='color:#002855;'>🇻🇪 SICE UNEFA</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 style='color:#0284c7;'>🇻🇪 SICE UNEFA</h2>", unsafe_allow_html=True)
     st.write("Sistema Integral de Cuidados de Enfermería")
     opcion = st.radio("Selecciona una función:", [
         "👥 Control de Pacientes",
@@ -215,71 +206,7 @@ elif opcion == "🧠 Gestión del PAE":
         p_auto = st.slider("NOC [0305]: Autocuidado: Higiene", 1, 5, value=1, key="p_auto")
         st.write("**NIC [1801]:**")
         act5 = st.checkbox("Asistir en el aseo general.", value=True, key="a5")
-        act6 = st.checkbox("Monitorear integridad cutánea.", key="a6")
+        act6 = st.checkbox("Monitorear integridad cutánea.", value=True, key="a6")
         resumen_cuidados.append({"dx": "Déficit de autocuidado: Baño", "inicial": 1, "final": p_auto, "acts": [a for a, m in [("Asistencia en baño", act5), ("Monitoreo cutáneo", act6)] if m]})
 
-    if dx_activos == 0:
-        st.info("⏱️ **Esperando Valoración:** Selecciona arriba los signos y síntomas identificados en el paciente para calcular los diagnósticos de enfermería.")
-    
-    else:
-        st.markdown("---")
-        st.markdown("### 3. Registro de Evaluación")
-        if st.button("💾 Finalizar Turno y Registrar Cuidados"):
-            st.success("✅ **Proceso de Atención de Enfermería completado.** La automatización del modelo SOAPIE se ha cargado con éxito para este turno.")
-            st.markdown(f"### 📝 Nota de Enfermería (SOAPIE)")
-            
-            s_text = "Paciente refiere sintomatología asociada al motivo de ingreso."
-            o_text = f"Evidencias clínicas evaluadas en la {paciente_actual['cama']} por el {enfermero}."
-            a_text = ", ".join([item['dx'] for item in resumen_cuidados])
-            p_text = "Restablecer patrones biológicos alterados."
-            i_text = ". ".join([", ".join(item['acts']) for item in resumen_cuidados if item['acts']])
-            e_text = ", ".join([f"Evolución NOC de {item['dx']}: {item['inicial']}/5 a {item['final']}/5" for item in resumen_cuidados])
-            
-            st.text_area("S (Subjetivo):", s_text, height=60)
-            st.text_area("O (Objetivo):", o_text, height=60)
-            st.text_area("A (Análisis/DxE):", f"Diagnósticos de Enfermería: {a_text}", height=60)
-            st.text_area("P (Planificación):", p_text, height=60)
-            st.text_area("I (Intervención):", f"Se ejecutó: {i_text}", height=60)
-            st.text_area("E (Evaluación):", e_text, height=60)
-
-# --- OPCIÓN 3: CALCULADORA DE GOTEO ---
-elif opcion == "🧮 Calculadora de Goteo":
-    st.markdown('<div class="titulo-unefa">SICE - UNEFA</div>', unsafe_allow_html=True)
-    st.markdown('<div class="subtitulo-unefa">🧮 CALCULADORA DE INFUSIÓN</div>', unsafe_allow_html=True)
-    
-    volumen = st.number_input("Volumen de la solución (ml):", min_value=1, value=500)
-    horas = st.number_input("Tiempo de infusión (Horas):", min_value=1, value=8)
-    ml_hora = volumen / horas
-    gotas_min = (volumen * 20) / (horas * 60)
-    st.markdown("### 📊 Resultado:")
-    st.info(f"💧 Velocidad de infusión: **{ml_hora:.1f} ml/hora**")
-    st.success(f"⏱️ Ritmo de goteo: **{gotas_min:.0f} gotas por minuto**")
-
-# --- OPCIÓN 4: DICCIONARIO NNN ---
-elif opcion == "📖 Diccionario NNN":
-    st.markdown('<div class="titulo-unefa">SICE - UNEFA</div>', unsafe_allow_html=True)
-    st.markdown('<div class="subtitulo-unefa">📖 VÍNCULOS NANDA, NOC Y NIC</div>', unsafe_allow_html=True)
-    
-    busqueda = st.text_input("🔍 Busca por nombre o código (Ej: Dolor, Hipotermia):")
-    st.markdown("---")
-    
-    encontrado = False
-    for dx, datos in diccionario_nanda.items():
-        if busqueda.lower() in dx.lower() or busqueda.lower() in datos['codigo']:
-            encontrado = True
-            
-            st.markdown(f"### 📋 {datos['codigo']} {dx}")
-            st.caption(f"**Ubicación:** Dominio {datos['dominio']} | Clase {datos['clase']}")
-            
-            with st.expander("📚 Ver Definición Oficial NANDA"):
-                st.write(datos['definicion'])
-            with st.expander("🧬 Factores Relacionados / Causas"):
-                st.write(datos['causas'])
-            with st.expander("🎯 Resultados Sugeridos (NOC)"):
-                st.write(datos['noc'])
-            with st.expander("📋 Intervenciones Sugeridas (NIC)"):
-                st.write(datos['nic'])
-            st.markdown("---")
-            
-    if not encontrado and busqueda != "":
-        st.error("❌ No se encontró ese diagnóstico en el prototipo.")
+    if dx_activos
